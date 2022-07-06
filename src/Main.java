@@ -2,36 +2,40 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        Path path = Paths.get("/home/anton/Капитанская_дочка.txt");
+        BoyerMoore boyerMoore = new BoyerMoore();
+        List<Integer> found =  boyerMoore.find("GCATCGCAGAGAGTATACAGTACG", "GCAGAGAG");
 
-        String text = String.join("", Files.readAllLines(path));
-
-        System.out.println("Кол-во символов в тексте: " + text.length());
-        System.out.println("Максимальный код UTF-8= " + getMaxChar(text));
-
-        Stopwatch sw = new Stopwatch();
-
-        String pattern = "шейка";
-
-        System.out.print("Полный перебор: ");
-        sw.start();
-        for (int i = 0; i < 1000; i++) {
-            findFullScan(text, pattern);
-        }
-        sw.stop();
-        System.out.println(sw.getElapsedTime());
-
-        System.out.print("Алгоритм Бойера–Мура–Хорспула: ");
-        sw.start();
-        for (int i = 0; i < 1000; i++) {
-            findBMH(text, pattern);
-        }
-        sw.stop();
-
-        System.out.println(sw.getElapsedTime());
+//        Path path = Paths.get("/home/anton/Капитанская_дочка.txt");
+//
+//        String text = String.join("", Files.readAllLines(path));
+//
+//        System.out.println("Кол-во символов в тексте: " + text.length());
+//        System.out.println("Максимальный код UTF-8= " + getMaxChar(text));
+//
+//        Stopwatch sw = new Stopwatch();
+//
+//        String pattern = "шейка";
+//
+//        System.out.print("Полный перебор: ");
+//        sw.start();
+//        for (int i = 0; i < 1000; i++) {
+//            findFullScan(text, pattern);
+//        }
+//        sw.stop();
+//        System.out.println(sw.getElapsedTime());
+//
+//        System.out.print("Алгоритм Бойера–Мура–Хорспула: ");
+//        sw.start();
+//        for (int i = 0; i < 1000; i++) {
+//            findBMH(text, pattern);
+//        }
+//        sw.stop();
+//
+//        System.out.println(sw.getElapsedTime());
     }
 
     /**
