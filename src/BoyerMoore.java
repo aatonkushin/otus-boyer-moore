@@ -1,18 +1,21 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class BoyerMoore {
+public class BoyerMoore implements Find {
+    int[] table;
+
+    public BoyerMoore(int alphabetLength) {
+        table = new int[alphabetLength];    // размер алфавита = размеру UTF-8
+    }
 
     /**
      * Функция для вычисления таблицы сдвигов плохих символов
      *
      * @param x - шаблон
-     * @return
+     * @return таблица сдвигов плохих символов
      */
-    @SuppressWarnings("DuplicatedCode")
+    @SuppressWarnings({"DuplicatedCode", "ExplicitArrayFilling"})
     private int[] preBmBc(String x) {
-        int[] table = new int[0x10FFFF];    // размер алфавита = размеру UTF-8
-
         for (int i = 0; i < table.length; i++) {
             table[i] = x.length();
         }
@@ -76,12 +79,12 @@ public class BoyerMoore {
         int[] table = new int[m];
         int lastPrefixPosition = m;
 
-        for (int i = m; i > 0; i--) {
+        for (int i = m - 1; i >= 0; i--) {
             // Если подстрока x[i+1..m-1] является префиксом, то запомним её начало
-            if (isPrefix(x, i)) {
-                lastPrefixPosition = i;
+            if (isPrefix(x, i + 1)) {
+                lastPrefixPosition = i + 1;
             }
-            table[m - i] = lastPrefixPosition + m - 1;
+            table[m - i - 1] = lastPrefixPosition + m - 1 - i;
         }
 
         for (int i = 0; i < m - 1; i++) {
@@ -92,7 +95,7 @@ public class BoyerMoore {
         return table;
     }
 
-    public List<Integer> find(String y, String x) {
+    public int find(String y, String x) {
         int m = x.length();
         int n = y.length();
 
@@ -101,20 +104,19 @@ public class BoyerMoore {
 
         if (x.length() == 0) {
             // Искомая подстрока является пустой
-            answer.add(-1);
-            return answer;
+            return -1;
         }
 
         // Предварительные вычисления
         int[] bmBc = preBmBc(x);    // сдвиги плохих символов
-        int[] bmGs = preBmGs(x);
+        int[] bmGs = preBmGs(x);    // сдвиги хороших суффиксов
 
-        for (int i = m - 1; i < n - 1; i++) {
+        for (int i = m - 1; i < n; ) {
             int j = m - 1;
 
             while (x.charAt(j) == y.charAt(i)) {
                 if (j == 0) {
-                    answer.add(i);  // Найдена подстрока в позиции i
+                    return i;  // Найдена подстрока в позиции i
                 }
 
                 i--;
@@ -124,13 +126,10 @@ public class BoyerMoore {
             i += max(bmGs[m - 1 - j], bmBc[y.charAt(i)]);
         }
 
-        if (answer.isEmpty()) {
-            answer.add(-1);
-        }
-
-        return answer;
+        return -1;
     }
 
+    @SuppressWarnings("ManualMinMaxCalculation")
     private int max(int x, int y) {
         return x > y ? x : y;
     }
