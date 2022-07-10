@@ -8,12 +8,19 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Path path = Paths.get("./Капитанская_дочка.txt");
         String text = String.join("", Files.readAllLines(path));
-        String pattern = "безвинных";
 
         System.out.println("Кол-во символов в тексте: " + text.length());
         int alphabetLength = getMaxChar(text);
         System.out.println("Максимальный код UTF-8= " + alphabetLength);
 
+        String pattern = "безвинных";
+        System.out.println(pattern);
+        for (int t = 100; t <= 10000; t *= 10) {
+            test(text, pattern, t, alphabetLength);
+        }
+
+        pattern = "казак";
+        System.out.println(pattern);
         for (int t = 100; t <= 10000; t *= 10) {
             test(text, pattern, t, alphabetLength);
         }
@@ -54,6 +61,14 @@ public class Main {
         //------------------------------------------
         boyerMoore = new BoyerMoore(alphabetLength);
         singleTest(boyerMoore, sw, "Алгоритм Бойера–Мура (оптимизирован)", text, pattern, t);
+
+        //------------------------------------------
+        Kmp kmp = new Kmp();
+        singleTest(kmp, sw, "Алгоритм Кнута-Морриса-Пратта", text, pattern, t);
+
+        //------------------------------------------
+        Kmp2 kmp2 = new Kmp2();
+        singleTest(kmp2, sw, "Алгоритм Кнута-Морриса-Пратта (объединение строк)", text, pattern, t);
     }
 
     private static void singleTest(Find f, Stopwatch sw, String title, String text, String pattern, int t) {
